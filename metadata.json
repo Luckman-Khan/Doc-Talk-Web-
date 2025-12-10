@@ -1,0 +1,8 @@
+{
+  "name": "Doc Talk",
+  "description": "A WhatsApp-style AI health assistant powered by Gemini 2.5.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
