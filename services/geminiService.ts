@@ -11,19 +11,19 @@ Always include a disclaimer that you are an AI and not a substitute for professi
  * Now requires apiKey to be passed in to support BYOK (Bring Your Own Key).
  */
 export const sendMessageToGemini = async (
-  text: string, 
+  text: string,
   imageBase64: string | undefined,
   apiKey: string
 ): Promise<string> => {
   try {
     if (!apiKey) {
-        throw new Error("API Key is missing.");
+      throw new Error("API Key is missing.");
     }
 
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
     const parts: any[] = [];
-    
+
     // Add text part if exists
     if (text) {
       parts.push({ text });
@@ -51,7 +51,7 @@ export const sendMessageToGemini = async (
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash', 
+      model: 'gemini-2.5-flash',
       contents: {
         role: 'user',
         parts: parts
@@ -65,11 +65,15 @@ export const sendMessageToGemini = async (
     return response.text || "I'm sorry, I couldn't process that.";
   } catch (error: any) {
     console.error("Gemini API Error:", error);
-    
-    if (error.message?.includes("API key")) {
-        return "⚠️ Authentication Error: The API Key provided is invalid.";
+
+    if (error.message?.includes("429") || error.message?.includes("exhausted") || error.message?.includes("quota")) {
+      return "QUOTA_EXCEEDED";
     }
-    
-    return "⚠️ I'm having trouble connecting to the server. Please check your connection or API key.";
+
+    if (error.message?.includes("API key")) {
+      return "⚠️ Authentication Error: The API Key provided is invalid.";
+    }
+
+    return "⚠️ I'm having trouble connecting to the server. Please check your connection.";
   }
 };
