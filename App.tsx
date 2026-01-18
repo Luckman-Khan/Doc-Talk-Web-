@@ -6,6 +6,7 @@ import { ApiKeyModal } from './components/ApiKeyModal';
 import { Message } from './types';
 import { sendMessageToGemini } from './services/geminiService';
 import { Lock } from 'lucide-react';
+import { Analytics } from "@vercel/analytics/react"
 
 export default function App() {
   const [messages, setMessages] = useState<Message[]>([
@@ -130,6 +131,7 @@ export default function App() {
   return (
     <div className="flex justify-center bg-[#111b21] min-h-screen font-sans">
       <div className="w-full max-w-[500px] h-screen bg-[#e5ddd5] bg-whatsapp-pattern flex flex-col shadow-2xl overflow-hidden relative">
+        <Analytics />
 
         <Header onSettingsClick={handleClearKey} />
 
